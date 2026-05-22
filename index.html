@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JoonHee's Playlist</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    body {
+      overflow-x: hidden;
+    }
+
+    .playlist-page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 52px;
+    }
+
+    .playlist-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(270px, 0.62fr);
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .playlist-hero-main {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(24px, 5vw, 46px);
+      min-height: 260px;
+    }
+
+    .playlist-hero-main::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -90px;
+      width: 270px;
+      height: 270px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle, rgba(255,143,199,0.48), transparent 62%),
+        linear-gradient(135deg, rgba(255,143,199,0.40), rgba(139,215,255,0.38));
+    }
+
+    .playlist-eyebrow {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.62);
+      border: 1px solid var(--my-line);
+      color: var(--my-muted);
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+    }
+
+    .playlist-title {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: clamp(2.4rem, 7vw, 5.4rem);
+      line-height: 0.9;
+      letter-spacing: -0.06em;
+      color: #172033;
+    }
+
+    .playlist-subtitle {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+      margin: 16px 0 0;
+      color: var(--my-muted);
+      font-size: 1rem;
+      line-height: 1.72;
+      word-break: keep-all;
+    }
+
+    .playlist-side {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .playlist-side .playlist-symbol {
+      font-size: clamp(3.4rem, 8vw, 5.8rem);
+      line-height: 0.95;
+    }
+
+    .playlist-side .playlist-value {
+      color: var(--my-ink);
+      font-size: 1.36rem;
+      line-height: 1.35;
+      letter-spacing: -0.04em;
+      word-break: keep-all;
+    }
+
+    .playlist-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(340px, 420px);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .playlist-main,
+    .playlist-player {
+      min-width: 0;
+    }
+
+    .playlist-player {
+      position: sticky;
+      top: 18px;
+    }
+
+    .playlist-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--my-line);
+      background: rgba(255,255,255,0.34);
+    }
+
+    .playlist-card-title {
+      margin: 0;
+      color: var(--my-ink);
+      font-size: 1.05rem;
+      line-height: 1.2;
+      letter-spacing: -0.04em;
+    }
+
+    .playlist-card-body {
+      padding: 20px;
+    }
+
+    .playlist-badge,
+    .playlist-chip,
+    .playlist-tag {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      max-width: 100%;
+      padding: 7px 10px;
+      border: 1px solid var(--my-line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.68);
+      color: var(--my-muted);
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+
+    .playlist-badge {
+      font-size: 0.8rem;
+    }
+
+    .playlist-control-row,
+    .playlist-filter-row,
+    .playlist-card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .playlist-control-row {
+      margin-bottom: 16px;
+    }
+
+    .playlist-filter-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) 200px 140px;
+      margin-bottom: 14px;
+    }
+
+    .playlist-input,
+    .playlist-select {
+      width: 100%;
+      min-height: 42px;
+      padding: 11px 13px;
+      border: 1px solid var(--my-line);
+      border-radius: 14px;
+      outline: none;
+      background: rgba(255,255,255,0.76);
+      color: var(--my-ink);
+      font-family: inherit;
+    }
+
+    .playlist-input:focus,
+    .playlist-select:focus {
+      border-color: rgba(255,143,199,0.72);
+      box-shadow: 0 0 0 4px rgba(255,143,199,0.16);
+    }
+
+    .playlist-btn,
+    .playlist-link-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 40px;
+      padding: 10px 14px;
+      border: 1px solid var(--my-line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.72);
+      color: var(--my-ink);
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+    }
+
+    .playlist-btn:hover,
+    .playlist-link-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.02);
+      box-shadow: 0 12px 26px rgba(94,120,160,0.15);
+    }
+
+    .playlist-btn.primary,
+    .playlist-link-btn.primary {
+      background: linear-gradient(135deg, rgba(255,143,199,0.95), rgba(139,215,255,0.88));
+      color: #172033;
+      border-color: rgba(255,255,255,0.84);
+    }
+
+    .playlist-btn.ok {
+      background: rgba(199,183,255,0.34);
+    }
+
+    .playlist-btn.danger {
+      color: #a33434;
+    }
+
+    .playlist-btn.mini,
+    .playlist-link-btn.mini {
+      min-height: 34px;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+    }
+
+    .playlist-stats {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .playlist-stat {
+      padding: 12px;
+      border: 1px solid var(--my-line);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.52);
+    }
+
+    .playlist-stat strong {
+      display: block;
+      color: var(--my-ink);
+      font-size: 1.38rem;
+      letter-spacing: -0.05em;
+    }
+
+    .playlist-stat span {
+      color: var(--my-muted);
+      font-size: 0.76rem;
+      line-height: 1.35;
+    }
+
+    .playlist-section-label {
+      margin: 0 0 8px;
+      color: var(--my-muted);
+      font-size: 0.84rem;
+      line-height: 1.45;
+    }
+
+    .playlist-category-strip,
+    .playlist-artist-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 2px 0 16px;
+    }
+
+    .playlist-chip {
+      min-height: 34px;
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    .playlist-chip:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(94,120,160,0.13);
+    }
+
+    .playlist-chip.active {
+      background: linear-gradient(135deg, rgba(255,143,199,0.90), rgba(139,215,255,0.78));
+      color: #172033;
+      border-color: rgba(255,255,255,0.86);
+    }
+
+    .playlist-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .playlist-item {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+      min-width: 0;
+      padding: 14px;
+      color: var(--my-ink);
+      transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+    }
+
+    .playlist-item:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.02);
+      box-shadow: 0 24px 50px rgba(94,120,160,0.18);
+    }
+
+    .playlist-item.active {
+      outline: 3px solid rgba(255,143,199,0.24);
+      border-color: rgba(255,143,199,0.45);
+    }
+
+    .playlist-thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 1px solid var(--my-line);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255,143,199,0.18), rgba(139,215,255,0.18));
+    }
+
+    .playlist-thumb img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .playlist-thumb-empty {
+      display: grid;
+      place-items: center;
+      height: 100%;
+      color: var(--my-muted);
+      font-size: 0.84rem;
+    }
+
+    .playlist-type-badge,
+    .playlist-lang-badge {
+      position: absolute;
+      bottom: 10px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(23,32,51,0.76);
+      color: #fff;
+      font-size: 0.72rem;
+    }
+
+    .playlist-type-badge { left: 10px; }
+    .playlist-lang-badge { right: 10px; background: rgba(255,255,255,0.86); color: #172033; }
+
+    .playlist-item h3 {
+      margin: 0;
+      font-size: 0.98rem;
+      line-height: 1.42;
+      letter-spacing: -0.035em;
+      word-break: keep-all;
+    }
+
+    .playlist-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .playlist-note {
+      margin: 9px 0 0;
+      color: var(--my-muted);
+      font-size: 0.82rem;
+      line-height: 1.52;
+      word-break: break-word;
+    }
+
+    .playlist-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-bottom: 1px solid var(--my-line);
+    }
+
+    #ytPlayer {
+      width: 100%;
+      height: 100%;
+    }
+
+    .playlist-now-title {
+      margin: 0;
+      color: var(--my-ink);
+      font-size: clamp(1.05rem, 2vw, 1.45rem);
+      line-height: 1.32;
+      letter-spacing: -0.045em;
+      word-break: keep-all;
+    }
+
+    .playlist-now-meta {
+      margin-top: 6px;
+      color: var(--my-muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    .playlist-guide {
+      margin-top: 14px;
+      color: var(--my-muted);
+      font-size: 0.86rem;
+      line-height: 1.65;
+      word-break: keep-all;
+    }
+
+    .playlist-queue {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+      max-height: 260px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .playlist-queue-item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 8px;
+      align-items: start;
+      padding: 9px;
+      border: 1px solid var(--my-line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.52);
+      color: var(--my-muted);
+      font-size: 0.82rem;
+      line-height: 1.38;
+    }
+
+    .playlist-queue-item strong {
+      color: var(--my-ink);
+      font-weight: 700;
+    }
+
+    .playlist-empty,
+    .playlist-error {
+      grid-column: 1 / -1;
+      padding: 22px;
+      border: 1px dashed var(--my-line);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.46);
+      color: var(--my-muted);
+      line-height: 1.65;
+      word-break: keep-all;
+    }
+
+    .playlist-error {
+      color: #a33434;
+    }
+
+    @media (max-width: 1080px) {
+      .playlist-layout,
+      .playlist-hero {
+        grid-template-columns: 1fr;
+      }
+
+      .playlist-player {
+        position: static;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .playlist-page {
+        width: min(100% - 20px, 1180px);
+        padding-top: 14px;
+      }
+
+      .playlist-filter-row,
+      .playlist-grid,
+      .playlist-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .playlist-card-body {
+        padding: 16px;
+      }
+
+      .playlist-card-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body class="myworkspace-soft">
+  <nav class="myworkspace-topnav">
+    <a class="myworkspace-home" href="./">JoonHee's Playlist</a>
+    <span class="myworkspace-date">JoonHee's Playlist</span>
+  </nav>
+
+  <main class="playlist-page">
+    <section class="playlist-hero">
+      <div class="myworkspace-card playlist-hero-main">
+        <div class="playlist-eyebrow">playlist · pop · korean songs · featured artists</div>
+        <h1 class="playlist-title">JoonHee's Playlist</h1>
+        <p class="playlist-subtitle">
+          <code>links.txt</code>에 YouTube 링크만 콤마 또는 줄바꿈으로 넣으면,
+          팝송·한국 노래·대표 가수 카테고리·기타를 자동으로 만들고 카테고리별 재생, 랜덤 재생, 셔플 큐를 제공합니다.
+        </p>
+      </div>
+
+      <aside class="myworkspace-card playlist-side">
+        <div class="playlist-symbol">🎧</div>
+        <div class="playlist-value">
+          이 페이지는 별도 GitHub repository의 루트에 올려도 바로 동작하는 독립 배포형입니다.<br>
+          목록 수정은 <code>links.txt</code>만 바꾸면 됩니다.
+        </div>
+      </aside>
+    </section>
+
+    <section class="playlist-layout">
+      <section class="myworkspace-card playlist-main">
+        <div class="playlist-card-header">
+          <h2 class="playlist-card-title">Category collection</h2>
+          <span class="playlist-badge" id="dataStatus">Loading links.txt</span>
+        </div>
+
+        <div class="playlist-card-body">
+          <div class="playlist-stats">
+            <div class="playlist-stat"><strong id="totalCount">0</strong><span>Total</span></div>
+            <div class="playlist-stat"><strong id="popCount">0</strong><span>팝송</span></div>
+            <div class="playlist-stat"><strong id="koreanCount">0</strong><span>한국 노래</span></div>
+            <div class="playlist-stat"><strong id="artistCount">0</strong><span>Artists</span></div>
+            <div class="playlist-stat"><strong id="currentCount">0</strong><span>Current</span></div>
+          </div>
+
+          <div class="playlist-control-row">
+            <button class="playlist-btn primary" id="playCategoryBtn" type="button">Play category</button>
+            <button class="playlist-btn" id="randomCategoryBtn" type="button">Random category</button>
+            <button class="playlist-btn ok" id="shuffleCategoryBtn" type="button">Shuffle category</button>
+            <button class="playlist-btn" id="nextQueueBtn" type="button">Next</button>
+            <button class="playlist-btn danger" id="stopQueueBtn" type="button">Stop auto-next</button>
+          </div>
+
+          <div class="playlist-filter-row">
+            <input class="playlist-input" id="searchInput" type="search" placeholder="Search title, artist, channel, ID..." />
+            <select class="playlist-select" id="categoryFilter">
+              <option value="all">All categories</option>
+            </select>
+            <select class="playlist-select" id="typeFilter">
+              <option value="all">All types</option>
+              <option value="video">Videos</option>
+              <option value="playlist">Playlists</option>
+            </select>
+          </div>
+
+          <p class="playlist-section-label">대표 카테고리</p>
+          <div class="playlist-category-strip" id="mainCategoryStrip"></div>
+
+          <p class="playlist-section-label">대표 가수 카테고리</p>
+          <div class="playlist-artist-strip" id="artistStrip"></div>
+
+          <div class="playlist-grid" id="cards"></div>
+        </div>
+      </section>
+
+      <aside class="myworkspace-card playlist-player">
+        <div class="playlist-card-header">
+          <div>
+            <h2 class="playlist-now-title" id="nowTitle">No item selected</h2>
+            <div class="playlist-now-meta" id="nowMeta">카테고리를 고른 뒤 재생 버튼을 누르세요.</div>
+          </div>
+        </div>
+
+        <div class="playlist-frame">
+          <div id="ytPlayer"></div>
+        </div>
+
+        <div class="playlist-card-body">
+          <div class="playlist-card-actions">
+            <a class="playlist-link-btn primary" id="openYouTube" href="https://www.youtube.com" target="_blank" rel="noreferrer">Open on YouTube</a>
+            <button class="playlist-btn" id="copyLinkBtn" type="button">Copy link</button>
+            <button class="playlist-btn" id="reloadBtn" type="button">Reload links</button>
+            <button class="playlist-btn" id="clearCacheBtn" type="button">Clear cache</button>
+          </div>
+
+          <div class="playlist-guide">
+            현재 선택 카테고리: <code id="selectedCategoryLabel">All categories</code><br>
+            팝송/한국 노래는 제목·채널·가수명에 한글이 포함되는지 기준으로 자동 추정합니다.
+            대표 가수 목록은 고정 우선 분류하고, 목록 밖 1~2곡 가수는 기타로 묶습니다.
+            가수 이름은 <code>Artist - Song</code> 제목 패턴 또는 YouTube 채널명을 기준으로 생성합니다.
+          </div>
+
+          <h3 class="playlist-card-title" style="margin-top: 16px;">Current queue</h3>
+          <div class="playlist-queue" id="queueList">
+            <div class="playlist-queue-item">Shuffle category를 누르면 현재 카테고리 기준으로 큐가 생성됩니다.</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const LINK_SOURCE = "./links.txt";
+    const META_CACHE_KEY = "joonhee_playlist_oembed_cache_v2";
+    const THEME_KEY = "joonhee_playlist_theme_v2";
+
+    const MAIN_CATEGORIES = [
+      { key: "all", label: "All categories" },
+      { key: "pop", label: "팝송" },
+      { key: "korean", label: "한국 노래" },
+    ];
+
+    const FEATURED_ARTISTS = [
+      { label: "최유리", aliases: ["최유리", "Choi Yu Ree", "Choi Yuri", "Yu Ree Choi"] },
+      { label: "로이킴", aliases: ["로이킴", "Roy Kim"] },
+      { label: "Charlie Puth", aliases: ["Charlie Puth", "CharliePuth"] },
+      { label: "Lauv", aliases: ["Lauv"] },
+      { label: "LANY", aliases: ["Lany", "LANY"] },
+      { label: "Peder Elias", aliases: ["Peder Elias"] },
+      { label: "Ed Sheeran", aliases: ["Ed Sheeran"] },
+      { label: "이무진", aliases: ["이무진", "Lee Mujin", "Lee Mu Jin"] },
+      { label: "성시경", aliases: ["성시경", "Sung Si Kyung", "Sung Si-kyung"] },
+      { label: "규현", aliases: ["규현", "Kyuhyun", "Kyu Hyun"] },
+      { label: "Bruno Mars", aliases: ["Bruno Mars"] },
+      { label: "볼빨간사춘기", aliases: ["볼빨간사춘기", "BOL4", "Bolbbalgan4"] },
+      { label: "카더가든", aliases: ["카더가든", "Car the Garden", "Car, the Garden"] },
+      { label: "종현", aliases: ["종현", "JONGHYUN", "Jonghyun"] },
+      { label: "잔나비", aliases: ["잔나비", "JANNABI"] },
+      { label: "10CM", aliases: ["10cm", "10CM", "십센치"] },
+      { label: "BIG Naughty", aliases: ["BIG Naughty", "Big Naughty", "빅나티", "서동현"] },
+      { label: "AKMU", aliases: ["AKMU", "악뮤", "악동뮤지션", "Akdong Musician"] },
+      { label: "Crush", aliases: ["Crush", "크러쉬"] },
+      { label: "다비치", aliases: ["다비치", "Davichi"] },
+      { label: "PLAVE", aliases: ["PLAVE", "플레이브"] },
+      { label: "Pink Sweat$", aliases: ["Pink Sweat$", "Pink Sweat", "Pink Sweats"] },
+      { label: "폴킴", aliases: ["폴킴", "Paul Kim"] },
+      { label: "DAY6", aliases: ["DAY6", "Day6", "데이식스"] },
+      { label: "김종국", aliases: ["김종국", "Kim Jong Kook", "Kim Jong-kook"] },
+      { label: "멜로망스", aliases: ["멜로망스", "MeloMance", "Melomance"] },
+    ];
+
+    const OTHER_ARTIST_LABEL = "기타";
+    const OTHER_ARTIST_THRESHOLD = 2;
+
+
+    const state = {
+      rawLinks: [],
+      items: [],
+      selectedId: "",
+      selectedCategory: "all",
+      query: "",
+      type: "all",
+      playerReady: false,
+      player: null,
+      queue: [],
+      queueIndex: -1,
+      autoNext: false,
+      currentUrl: "",
+      loadingSeq: 0,
+    };
+
+    const $ = (selector) => document.querySelector(selector);
+
+    const app = document.body;
+    const reloadBtn = $("#reloadBtn");
+    const clearCacheBtn = $("#clearCacheBtn");
+    const dataStatus = $("#dataStatus");
+    const totalCount = $("#totalCount");
+    const popCount = $("#popCount");
+    const koreanCount = $("#koreanCount");
+    const artistCount = $("#artistCount");
+    const currentCount = $("#currentCount");
+    const searchInput = $("#searchInput");
+    const categoryFilter = $("#categoryFilter");
+    const typeFilter = $("#typeFilter");
+    const mainCategoryStrip = $("#mainCategoryStrip");
+    const artistStrip = $("#artistStrip");
+    const cards = $("#cards");
+    const nowTitle = $("#nowTitle");
+    const nowMeta = $("#nowMeta");
+    const openYouTube = $("#openYouTube");
+    const copyLinkBtn = $("#copyLinkBtn");
+    const playCategoryBtn = $("#playCategoryBtn");
+    const randomCategoryBtn = $("#randomCategoryBtn");
+    const shuffleCategoryBtn = $("#shuffleCategoryBtn");
+    const nextQueueBtn = $("#nextQueueBtn");
+    const stopQueueBtn = $("#stopQueueBtn");
+    const queueList = $("#queueList");
+    const selectedCategoryLabel = $("#selectedCategoryLabel");
+
+    function loadCache() {
+      try {
+        return JSON.parse(localStorage.getItem(META_CACHE_KEY) || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function saveCache(cache) {
+      localStorage.setItem(META_CACHE_KEY, JSON.stringify(cache));
+    }
+
+    function stableId(input) {
+      let hash = 0;
+      for (let i = 0; i < input.length; i += 1) {
+        hash = ((hash << 5) - hash + input.charCodeAt(i)) | 0;
+      }
+      return Math.abs(hash).toString(36);
+    }
+
+    function extractLinks(text) {
+      const matches = String(text).match(/https?:\/\/[^\s,\]\)\}>"']+/g) || [];
+      const cleaned = matches
+        .map((url) => url.trim().replace(/[.,;]+$/g, ""))
+        .filter(Boolean);
+      return [...new Set(cleaned)];
+    }
+
+    function parseYouTubeUrl(raw) {
+      let url;
+      try {
+        url = new URL(String(raw).trim());
+      } catch {
+        return null;
+      }
+
+      const host = url.hostname.replace(/^www\./, "");
+      const isYouTube =
+        host === "youtube.com" ||
+        host === "m.youtube.com" ||
+        host === "music.youtube.com" ||
+        host === "youtu.be" ||
+        host === "youtube-nocookie.com";
+
+      if (!isYouTube) return null;
+
+      const listId = url.searchParams.get("list");
+      let videoId = url.searchParams.get("v");
+
+      if (!videoId && host === "youtu.be") {
+        videoId = url.pathname.split("/").filter(Boolean)[0] || "";
+      }
+
+      if (!videoId && url.pathname.includes("/embed/")) {
+        videoId = url.pathname.split("/embed/")[1]?.split("/")[0] || "";
+      }
+
+      if (!videoId && url.pathname.includes("/shorts/")) {
+        videoId = url.pathname.split("/shorts/")[1]?.split("/")[0] || "";
+      }
+
+      if (listId) {
+        return {
+          type: "playlist",
+          id: listId,
+          videoId: videoId || "",
+        };
+      }
+
+      if (videoId) {
+        return {
+          type: "video",
+          id: videoId,
+          videoId,
+        };
+      }
+
+      return null;
+    }
+
+    function canonicalUrl(link, parsed) {
+      if (!parsed) return link;
+      if (parsed.type === "playlist") {
+        return `https://www.youtube.com/playlist?list=${encodeURIComponent(parsed.id)}`;
+      }
+      return `https://www.youtube.com/watch?v=${encodeURIComponent(parsed.id)}`;
+    }
+
+    function thumbnailFor(parsed, meta) {
+      if (meta?.thumbnail_url) return meta.thumbnail_url;
+      if (parsed?.videoId) return `https://i.ytimg.com/vi/${parsed.videoId}/hqdefault.jpg`;
+      if (parsed?.type === "video") return `https://i.ytimg.com/vi/${parsed.id}/hqdefault.jpg`;
+      return "";
+    }
+
+    function removeBracketNoise(text) {
+      return String(text || "")
+        .replace(/\[[^\]]*(official|mv|m\/v|video|audio|lyrics?|live|performance|visualizer|teaser|stage|가사|뮤비|음원|티저)[^\]]*\]/gi, "")
+        .replace(/\([^\)]*(official|mv|m\/v|video|audio|lyrics?|live|performance|visualizer|teaser|stage|가사|뮤비|음원|티저)[^\)]*\)/gi, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function cleanArtistName(text) {
+      let value = String(text || "").trim();
+      value = value
+        .replace(/\s*-\s*Topic$/i, "")
+        .replace(/\s*VEVO$/i, "")
+        .replace(/\s*Official$/i, "")
+        .replace(/\s*Official Channel$/i, "")
+        .replace(/\s*OFFICIAL$/i, "")
+        .replace(/\s*Records$/i, "")
+        .replace(/\s*Entertainment$/i, "")
+        .replace(/\s*Music$/i, "")
+        .replace(/\s*Label$/i, "")
+        .replace(/\s*레이블$/i, "")
+        .replace(/\s*공식$/i, "")
+        .replace(/\s+/g, " ")
+        .trim();
+      return value || "Unknown Artist";
+    }
+
+    function inferArtist(title, authorName) {
+      const cleanTitle = removeBracketNoise(title);
+
+      const separatorMatch = cleanTitle.match(/^(.{1,80}?)\s(?:-|–|—|\||｜|:)\s(.+)$/);
+      if (separatorMatch?.[1]) {
+        return cleanArtistName(separatorMatch[1]);
+      }
+
+      const quoteMatch = cleanTitle.match(/^(.{1,60}?)\s*[\"'‘’“”]/);
+      if (quoteMatch?.[1]) {
+        return cleanArtistName(quoteMatch[1]);
+      }
+
+      const byMatch = cleanTitle.match(/^(.{1,60}?)\s+by\s+(.+)$/i);
+      if (byMatch?.[2]) {
+        return cleanArtistName(byMatch[2]);
+      }
+
+      return cleanArtistName(authorName || "Unknown Artist");
+    }
+
+    function hasHangul(text) {
+      return /[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(String(text || ""));
+    }
+
+    function inferLanguageCategory(title, channel, artist) {
+      const haystack = `${title} ${channel} ${artist}`;
+      if (hasHangul(haystack)) {
+        return { key: "korean", label: "한국 노래" };
+      }
+      return { key: "pop", label: "팝송" };
+    }
+
+    function normalizeArtistKey(text) {
+      return String(text || "")
+        .normalize("NFKD")
+        .toLowerCase()
+        .replace(/&/g, "and")
+        .replace(/[^a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ]/g, "");
+    }
+
+    function inferPreferredArtist(title, channel, artist) {
+      const haystack = normalizeArtistKey(`${title} ${channel} ${artist}`);
+
+      for (const entry of FEATURED_ARTISTS) {
+        const keys = [entry.label, ...entry.aliases].map(normalizeArtistKey).filter(Boolean);
+
+        if (keys.some((key) => key && haystack.includes(key))) {
+          return entry.label;
+        }
+      }
+
+      return "";
+    }
+
+    function assignArtistCategories(items) {
+      const rawCounts = new Map();
+
+      for (const item of items) {
+        const preferred = inferPreferredArtist(item.title, item.channel, item.artist);
+        item.preferredArtist = preferred;
+        item.artistCategory = preferred || item.artist;
+        rawCounts.set(item.artistCategory, (rawCounts.get(item.artistCategory) || 0) + 1);
+      }
+
+      const featuredLabels = new Set(FEATURED_ARTISTS.map((entry) => entry.label));
+
+      for (const item of items) {
+        const category = item.artistCategory;
+        const count = rawCounts.get(category) || 0;
+
+        if (!featuredLabels.has(category) && count <= OTHER_ARTIST_THRESHOLD) {
+          item.artistCategory = OTHER_ARTIST_LABEL;
+        }
+      }
+    }
+
+
+    async function fetchOEmbed(url, cache) {
+      const key = stableId(url);
+      const cached = cache[key];
+
+      if (cached && Date.now() - cached.cachedAt < 1000 * 60 * 60 * 24 * 7) {
+        return cached.data;
+      }
+
+      const endpoint = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`;
+      const response = await fetch(endpoint);
+
+      if (!response.ok) {
+        throw new Error(`oEmbed HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      cache[key] = {
+        cachedAt: Date.now(),
+        data,
+      };
+      saveCache(cache);
+      return data;
+    }
+
+    async function buildItem(link, index, cache) {
+      const parsed = parseYouTubeUrl(link);
+      if (!parsed) return null;
+
+      const url = canonicalUrl(link, parsed);
+      let meta = null;
+      let status = "metadata";
+
+      try {
+        meta = await fetchOEmbed(url, cache);
+      } catch (error) {
+        status = "fallback";
+      }
+
+      const title = meta?.title || (parsed.type === "playlist" ? `Playlist ${parsed.id}` : `Video ${parsed.id}`);
+      const channel = meta?.author_name || "Unknown Channel";
+      const artist = inferArtist(title, channel);
+      const preferredArtist = inferPreferredArtist(title, channel, artist);
+      const artistCategory = preferredArtist || artist;
+      const language = inferLanguageCategory(title, channel, artistCategory);
+      const thumbnail = thumbnailFor(parsed, meta);
+
+      return {
+        localId: stableId(`${index}-${url}`),
+        index,
+        type: parsed.type,
+        sourceId: parsed.id,
+        videoId: parsed.videoId || (parsed.type === "video" ? parsed.id : ""),
+        url,
+        title,
+        channel,
+        artist,
+        artistCategory,
+        preferredArtist,
+        languageKey: language.key,
+        languageLabel: language.label,
+        thumbnail,
+        status,
+      };
+    }
+
+    async function loadLinks() {
+      const seq = ++state.loadingSeq;
+      dataStatus.textContent = "Loading links.txt";
+      cards.innerHTML = `<div class="playlist-empty">links.txt를 읽고 metadata를 가져오는 중입니다.</div>`;
+
+      try {
+        const response = await fetch(`${LINK_SOURCE}?ts=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`links.txt HTTP ${response.status}`);
+
+        const text = await response.text();
+        const links = extractLinks(text);
+        state.rawLinks = links;
+
+        if (!links.length) {
+          state.items = [];
+          dataStatus.textContent = "No valid links in links.txt";
+          render();
+          return;
+        }
+
+        const cache = loadCache();
+        const jobs = links.map((link, index) => buildItem(link, index, cache));
+        const settled = await Promise.all(jobs);
+
+        if (seq !== state.loadingSeq) return;
+
+        state.items = settled.filter(Boolean);
+        assignArtistCategories(state.items);
+        state.selectedId = state.items[0]?.localId || "";
+        state.selectedCategory = "all";
+        state.queue = [];
+        state.queueIndex = -1;
+        state.autoNext = false;
+
+        dataStatus.textContent = `Loaded ${state.items.length} links`;
+        render();
+
+        if (state.items[0]) {
+          selectItem(state.items[0].localId, false, false);
+        }
+      } catch (error) {
+        state.items = [];
+        dataStatus.textContent = "Failed to load links.txt";
+        cards.innerHTML = `<div class="playlist-error">links.txt를 불러오지 못했습니다. GitHub Pages에 links.txt가 index.html과 같은 위치에 있는지 확인하세요.</div>`;
+        console.error(error);
+      }
+    }
+
+    function getArtists() {
+      const counts = new Map();
+
+      for (const item of state.items) {
+        const category = item.artistCategory || item.artist || OTHER_ARTIST_LABEL;
+        counts.set(category, (counts.get(category) || 0) + 1);
+      }
+
+      const featuredOrder = FEATURED_ARTISTS
+        .map((entry) => entry.label)
+        .filter((label) => counts.has(label));
+
+      const featuredSet = new Set(featuredOrder);
+      const rest = [...counts.keys()]
+        .filter((label) => !featuredSet.has(label) && label !== OTHER_ARTIST_LABEL)
+        .sort((a, b) => a.localeCompare(b));
+
+      const result = [...featuredOrder, ...rest];
+
+      if (counts.has(OTHER_ARTIST_LABEL)) {
+        result.push(OTHER_ARTIST_LABEL);
+      }
+
+      return result;
+    }
+
+    function getCategoryLabel(categoryKey) {
+      const main = MAIN_CATEGORIES.find((entry) => entry.key === categoryKey);
+      if (main) return main.label;
+      if (categoryKey.startsWith("artist::")) return categoryKey.replace("artist::", "");
+      return "All categories";
+    }
+
+    function categoryMatches(item, categoryKey) {
+      if (categoryKey === "all") return true;
+      if (categoryKey === "pop") return item.languageKey === "pop";
+      if (categoryKey === "korean") return item.languageKey === "korean";
+      if (categoryKey.startsWith("artist::")) {
+        const artist = categoryKey.replace("artist::", "");
+        return (item.artistCategory || item.artist) === artist;
+      }
+      return true;
+    }
+
+    function getFilteredItems() {
+      const q = state.query.trim().toLowerCase();
+
+      return state.items.filter((item) => {
+        const haystack = [
+          item.title,
+          item.artist,
+          item.artistCategory,
+          item.channel,
+          item.type,
+          item.languageLabel,
+          item.sourceId,
+        ].join(" ").toLowerCase();
+
+        const queryOk = !q || haystack.includes(q);
+        const categoryOk = categoryMatches(item, state.selectedCategory);
+        const typeOk = state.type === "all" || item.type === state.type;
+
+        return queryOk && categoryOk && typeOk;
+      });
+    }
+
+    function renderStats() {
+      totalCount.textContent = String(state.items.length);
+      popCount.textContent = String(state.items.filter((item) => item.languageKey === "pop").length);
+      koreanCount.textContent = String(state.items.filter((item) => item.languageKey === "korean").length);
+      artistCount.textContent = String(getArtists().length);
+      currentCount.textContent = String(getFilteredItems().length);
+    }
+
+    function renderCategoryFilter() {
+      const artists = getArtists();
+      categoryFilter.innerHTML = "";
+
+      for (const category of MAIN_CATEGORIES) {
+        const option = document.createElement("option");
+        option.value = category.key;
+        option.textContent = category.label;
+        categoryFilter.appendChild(option);
+      }
+
+      const divider = document.createElement("option");
+      divider.disabled = true;
+      divider.textContent = "──── Artist categories ────";
+      categoryFilter.appendChild(divider);
+
+      for (const artist of artists) {
+        const option = document.createElement("option");
+        option.value = `artist::${artist}`;
+        option.textContent = artist;
+        categoryFilter.appendChild(option);
+      }
+
+      const validKeys = ["all", "pop", "korean", ...artists.map((artist) => `artist::${artist}`)];
+      if (!validKeys.includes(state.selectedCategory)) state.selectedCategory = "all";
+
+      categoryFilter.value = state.selectedCategory;
+      selectedCategoryLabel.textContent = getCategoryLabel(state.selectedCategory);
+    }
+
+    function makeButton(text, className, onClick) {
+      const el = document.createElement("button");
+      el.type = "button";
+      el.className = `playlist-btn mini ${className || ""}`.trim();
+      el.textContent = text;
+      el.addEventListener("click", onClick);
+      return el;
+    }
+
+    function makeChip(text, className, onClick) {
+      const el = document.createElement("button");
+      el.type = "button";
+      el.className = `playlist-chip ${className || ""}`.trim();
+      el.textContent = text;
+      el.addEventListener("click", onClick);
+      return el;
+    }
+
+    function makeLink(text, href, className) {
+      const el = document.createElement("a");
+      el.className = `playlist-link-btn mini ${className || ""}`.trim();
+      el.href = href;
+      el.target = "_blank";
+      el.rel = "noreferrer";
+      el.textContent = text;
+      return el;
+    }
+
+    function renderMainCategoryStrip() {
+      mainCategoryStrip.innerHTML = "";
+
+      for (const category of MAIN_CATEGORIES) {
+        const count = state.items.filter((item) => categoryMatches(item, category.key)).length;
+        const active = category.key === state.selectedCategory ? "active" : "";
+        const btn = makeChip(`${category.label} (${count})`, active, () => setCategory(category.key));
+        mainCategoryStrip.appendChild(btn);
+      }
+    }
+
+    function renderArtistStrip() {
+      const artists = getArtists();
+      artistStrip.innerHTML = "";
+
+      for (const artist of artists) {
+        const key = `artist::${artist}`;
+        const count = state.items.filter((item) => (item.artistCategory || item.artist) === artist).length;
+        const active = state.selectedCategory === key ? "active" : "";
+        const btn = makeChip(`${artist} (${count})`, active, () => setCategory(key));
+        artistStrip.appendChild(btn);
+      }
+    }
+
+    function renderCards() {
+      const filtered = getFilteredItems();
+      cards.innerHTML = "";
+
+      if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "playlist-empty";
+        empty.textContent = state.items.length
+          ? "현재 카테고리 또는 필터 조건에 맞는 항목이 없습니다."
+          : "표시할 링크가 없습니다. links.txt에 YouTube 링크를 추가하세요.";
+        cards.appendChild(empty);
+        return;
+      }
+
+      for (const item of filtered) {
+        const card = document.createElement("article");
+        card.className = `myworkspace-card playlist-item ${item.localId === state.selectedId ? "active" : ""}`;
+
+        const thumb = document.createElement("div");
+        thumb.className = "playlist-thumb";
+
+        if (item.thumbnail) {
+          const img = document.createElement("img");
+          img.src = item.thumbnail;
+          img.alt = `${item.title} thumbnail`;
+          img.loading = "lazy";
+          thumb.appendChild(img);
+        } else {
+          const placeholder = document.createElement("div");
+          placeholder.className = "playlist-thumb-empty";
+          placeholder.textContent = "No thumbnail";
+          thumb.appendChild(placeholder);
+        }
+
+        const typeBadge = document.createElement("span");
+        typeBadge.className = "playlist-type-badge";
+        typeBadge.textContent = item.type;
+        thumb.appendChild(typeBadge);
+
+        const langBadge = document.createElement("span");
+        langBadge.className = "playlist-lang-badge";
+        langBadge.textContent = item.languageLabel;
+        thumb.appendChild(langBadge);
+
+        const body = document.createElement("div");
+        const title = document.createElement("h3");
+        title.textContent = item.title;
+
+        const meta = document.createElement("div");
+        meta.className = "playlist-meta";
+
+        const artist = document.createElement("span");
+        artist.className = "playlist-tag";
+        artist.textContent = item.artistCategory || item.artist;
+
+        const detectedArtist = document.createElement("span");
+        detectedArtist.className = "playlist-tag";
+        detectedArtist.textContent = item.artistCategory && item.artistCategory !== item.artist
+          ? `detected: ${item.artist}`
+          : item.artist;
+
+        const channel = document.createElement("span");
+        channel.className = "playlist-tag";
+        channel.textContent = item.channel;
+
+        const lang = document.createElement("span");
+        lang.className = "playlist-tag";
+        lang.textContent = item.languageLabel;
+
+        meta.append(artist, detectedArtist, channel, lang);
+
+        const note = document.createElement("p");
+        note.className = "playlist-note";
+        note.textContent = item.type === "playlist"
+          ? "Playlist URL입니다. 카테고리 재생 시 이 플레이리스트 항목 자체가 재생됩니다."
+          : `Video ID: ${item.sourceId}`;
+
+        body.append(title, meta, note);
+
+        const actions = document.createElement("div");
+        actions.className = "playlist-card-actions";
+        actions.append(
+          makeButton("Play", "primary", () => selectItem(item.localId, true, true)),
+          makeButton("Artist category", "", () => setCategory(`artist::${item.artistCategory || item.artist}`)),
+          makeLink("YouTube", item.url, ""),
+          makeButton("Copy", "", () => copyText(item.url))
+        );
+
+        card.append(thumb, body, actions);
+        cards.appendChild(card);
+      }
+    }
+
+    function renderQueue() {
+      queueList.innerHTML = "";
+
+      if (!state.queue.length) {
+        const empty = document.createElement("div");
+        empty.className = "playlist-queue-item";
+        empty.textContent = "Shuffle category를 누르면 현재 카테고리 기준으로 큐가 생성됩니다.";
+        queueList.appendChild(empty);
+        return;
+      }
+
+      state.queue.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "playlist-queue-item";
+
+        const num = document.createElement("strong");
+        num.textContent = index === state.queueIndex ? "▶" : String(index + 1);
+
+        const text = document.createElement("div");
+        text.innerHTML = `<strong>${escapeHtml(item.artistCategory || item.artist)}</strong><br>${escapeHtml(item.title)}<br>${escapeHtml(item.languageLabel)}`;
+
+        row.append(num, text);
+        queueList.appendChild(row);
+      });
+    }
+
+    function render() {
+      renderStats();
+      renderCategoryFilter();
+      renderMainCategoryStrip();
+      renderArtistStrip();
+      renderCards();
+      renderQueue();
+    }
+
+    function setCategory(categoryKey) {
+      state.selectedCategory = categoryKey;
+      state.queue = [];
+      state.queueIndex = -1;
+      state.autoNext = false;
+      categoryFilter.value = categoryKey;
+      selectedCategoryLabel.textContent = getCategoryLabel(categoryKey);
+      render();
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function selectItem(localId, autoplay = true, shouldScroll = false) {
+      const item = state.items.find((entry) => entry.localId === localId);
+      if (!item) return;
+
+      state.selectedId = localId;
+      state.currentUrl = item.url;
+
+      nowTitle.textContent = item.title;
+      nowMeta.textContent = `${item.languageLabel} · ${item.artistCategory || item.artist} · ${item.channel} · ${item.type}`;
+      openYouTube.href = item.url;
+
+      loadIntoPlayer(item, autoplay);
+      renderCards();
+      renderQueue();
+
+      if (shouldScroll && window.innerWidth <= 1080) {
+        document.querySelector(".playlist-player").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    function loadIntoPlayer(item, autoplay) {
+      if (!state.playerReady || !state.player) return;
+
+      if (item.type === "playlist") {
+        state.player.loadPlaylist({
+          list: item.sourceId,
+          listType: "playlist",
+          index: 0,
+          startSeconds: 0,
+          suggestedQuality: "large",
+        });
+
+        if (!autoplay) {
+          window.setTimeout(() => state.player.pauseVideo(), 600);
+        }
+
+        try {
+          state.player.setShuffle(state.autoNext);
+        } catch {}
+        return;
+      }
+
+      if (autoplay) {
+        state.player.loadVideoById({ videoId: item.sourceId, suggestedQuality: "large" });
+      } else {
+        state.player.cueVideoById({ videoId: item.sourceId, suggestedQuality: "large" });
+      }
+    }
+
+    function randomChoice(items) {
+      if (!items.length) return null;
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function shuffle(items) {
+      const copied = [...items];
+      for (let i = copied.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copied[i], copied[j]] = [copied[j], copied[i]];
+      }
+      return copied;
+    }
+
+    function playCategory() {
+      const candidates = getFilteredItems();
+      if (!candidates.length) {
+        alert("현재 카테고리에서 재생할 항목이 없습니다.");
+        return;
+      }
+      state.queue = candidates;
+      state.queueIndex = 0;
+      state.autoNext = true;
+      selectItem(candidates[0].localId, true, true);
+      renderQueue();
+    }
+
+    function randomCategory() {
+      const candidates = getFilteredItems();
+      const item = randomChoice(candidates);
+
+      if (!item) {
+        alert("현재 카테고리에서 랜덤 재생할 항목이 없습니다.");
+        return;
+      }
+
+      state.queue = shuffle(candidates);
+      const selectedIndex = state.queue.findIndex((entry) => entry.localId === item.localId);
+      state.queueIndex = Math.max(0, selectedIndex);
+      state.autoNext = true;
+      selectItem(item.localId, true, true);
+      renderQueue();
+    }
+
+    function shuffleCategory() {
+      const candidates = getFilteredItems();
+
+      if (!candidates.length) {
+        alert("현재 카테고리에서 셔플 큐를 만들 항목이 없습니다.");
+        return;
+      }
+
+      state.queue = shuffle(candidates);
+      state.queueIndex = 0;
+      state.autoNext = true;
+      selectItem(state.queue[0].localId, true, true);
+      renderQueue();
+    }
+
+    function playNextQueue() {
+      if (!state.queue.length) {
+        randomCategory();
+        return;
+      }
+
+      state.queueIndex += 1;
+
+      if (state.queueIndex >= state.queue.length) {
+        state.queue = shuffle(getFilteredItems());
+        state.queueIndex = 0;
+      }
+
+      const item = state.queue[state.queueIndex];
+      if (item) selectItem(item.localId, true, true);
+    }
+
+    function stopQueue() {
+      state.autoNext = false;
+      state.queue = [];
+      state.queueIndex = -1;
+      renderQueue();
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        prompt("Copy this link:", text);
+      }
+    }
+
+    reloadBtn.addEventListener("click", loadLinks);
+
+    clearCacheBtn.addEventListener("click", () => {
+      localStorage.removeItem(META_CACHE_KEY);
+      loadLinks();
+    });
+
+    searchInput.addEventListener("input", (event) => {
+      state.query = event.target.value;
+      render();
+    });
+
+    categoryFilter.addEventListener("change", (event) => {
+      setCategory(event.target.value);
+    });
+
+    typeFilter.addEventListener("change", (event) => {
+      state.type = event.target.value;
+      render();
+    });
+
+    playCategoryBtn.addEventListener("click", playCategory);
+    randomCategoryBtn.addEventListener("click", randomCategory);
+    shuffleCategoryBtn.addEventListener("click", shuffleCategory);
+    nextQueueBtn.addEventListener("click", playNextQueue);
+    stopQueueBtn.addEventListener("click", stopQueue);
+
+    copyLinkBtn.addEventListener("click", () => {
+      if (!state.currentUrl) {
+        alert("먼저 항목을 선택하세요.");
+        return;
+      }
+      copyText(state.currentUrl);
+    });
+
+    window.onYouTubeIframeAPIReady = function () {
+      state.player = new YT.Player("ytPlayer", {
+        width: "100%",
+        height: "100%",
+        videoId: "",
+        playerVars: {
+          playsinline: 1,
+          rel: 0,
+          modestbranding: 1,
+          origin: window.location.origin,
+        },
+        events: {
+          onReady: () => {
+            state.playerReady = true;
+            if (state.selectedId) selectItem(state.selectedId, false, false);
+          },
+          onStateChange: (event) => {
+            if (event.data === YT.PlayerState.ENDED && state.autoNext) {
+              window.setTimeout(playNextQueue, 500);
+            }
+          },
+        },
+      });
+    };
+
+    loadLinks();
+  </script>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
