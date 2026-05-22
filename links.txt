@@ -1,43 +1,49 @@
 # links.txt
 # YouTube 링크를 콤마 또는 줄바꿈으로 계속 추가
-# 테스트를 위해 최근 들은 곡 랜덤으로 링크 추가
+# 테스트를 위해 최근 들은 곡 랜덤으로 링크 추가 ... 나중에 좋아하는 노래들로만 정리해야징
 
+https://youtu.be/8kQH_bBMrMQ?si=N4oH-ExWlNxS7gsp
+https://www.youtube.com/watch?v=VZnfZ14fIig&list=RDEMeyZkHiRS2y1GGJugILGZvw&index=38
+https://www.youtube.com/watch?v=93SsG6D78XI&list=RDEMeyZkHiRS2y1GGJugILGZvw&index=20
+https://www.youtube.com/watch?v=K9rh_tRiStg&list=RDEMeyZkHiRS2y1GGJugILGZvw&index=14
+https://www.youtube.com/watch?v=2VkWaOOF4Rc&list=RDEMKbwcOnA077-72CXVivoQ7g&start_radio=1
 https://www.youtube.com/watch?v=ok7vbBYpFo8&list=RDqJPCAIKDNCU&index=15
-
+https://www.youtube.com/watch?v=lQcnNPqy2Ww&list=RDEMKbwcOnA077-72CXVivoQ7g&index=4
 https://www.youtube.com/watch?v=vVrFyMDMrlM
-
+https://www.youtube.com/watch?v=p1QPgakcicE&list=RDEMKbwcOnA077-72CXVivoQ7g&index=3
 https://www.youtube.com/watch?v=Y18fAtkp8DI
-
+https://www.youtube.com/watch?v=1QRKs0As3lA&list=RDEMLe0pdNP7fw5JiaqKD01mQw&index=9
 https://www.youtube.com/watch?v=GpQ222I1ULc
-
+https://www.youtube.com/watch?v=XrUUdlGVanU&list=RDEMLe0pdNP7fw5JiaqKD01mQw&start_radio=1
 https://www.youtube.com/watch?v=7U4XmzwS4sc
-
+https://www.youtube.com/watch?v=qIUGN4qF5vo&list=RDEMLe0pdNP7fw5JiaqKD01mQw&index=5
 https://www.youtube.com/watch?v=Ry1RrIVyl1M
-
+https://www.youtube.com/watch?v=5zAEiu3SaO4&list=RDEMeyZkHiRS2y1GGJugILGZvw&index=4
 https://www.youtube.com/watch?v=TqVw-Lv3wBo
 
 https://www.youtube.com/watch?v=wWj1NWkDlfo
 
 https://www.youtube.com/watch?v=LyWmBvnMmu8
-
+https://www.youtube.com/watch?v=mR-kkHE0-tU&list=OLAK5uy_mr8sWKITEb0G6pzjpz1DWzGSQtMsqaRBs
 https://www.youtube.com/watch?v=VQZXXciZb_c
-
+https://youtu.be/a7fzkqLozwA?si=9cXE81UYs1vmysJb
 https://www.youtube.com/watch?v=DYrY1E4-9NI
-
+https://youtu.be/kOCkne-Bku4?si=3XQv1_Y8St93moUF
 https://www.youtube.com/watch?v=WxM0qO29RM8
-
+https://youtu.be/VT_hLby9uSY?si=AIkDKAMtX7sJzZy8
 https://www.youtube.com/watch?v=cokQYmeSij0
-
+https://www.youtube.com/watch?v=LmIHKB6OFHQ&list=RDLmIHKB6OFHQ&start_radio=1
 https://www.youtube.com/watch?v=L8UUYfe6-UA
-
+https://youtu.be/AH8b7EynJ60?si=t8FapPH4wpAiU37K
 https://www.youtube.com/watch?v=j7PZv7Ni7pk
-
+https://www.youtube.com/watch?v=2kFNGAEo45Q
 https://www.youtube.com/watch?v=b-PlUO9Ft8A
-
+https://www.youtube.com/watch?v=QSjCmQvS3bI&list=OLAK5uy_lUctjL14BonIbkQJ22oYlo5VMEvKZfjD0
+https://www.youtube.com/watch?v=Z0_Eoiss2Rk&list=OLAK5uy_leutf7T0B6s9GDOVqslBsCxl57ia_-wuQ&index=3
 https://www.youtube.com/watch?v=oYtnWkhKN8o
-
+https://www.youtube.com/watch?v=gvRPcU1XaL8&list=OLAK5uy_leutf7T0B6s9GDOVqslBsCxl57ia_-wuQ&index=6
 https://www.youtube.com/watch?v=SNn_H_Q2moo
-
+https://youtu.be/pPAAFMtDUzo?si=eAmNSWw4Zayy_luL
 https://www.youtube.com/watch?v=gH1rVdXUlpo
 https://www.youtube.com/watch?v=hYjkzYt-bcM
 https://www.youtube.com/watch?v=aShjZO9sue0
