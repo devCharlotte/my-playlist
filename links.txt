@@ -2,6 +2,19 @@
 # YouTube 링크를 콤마 또는 줄바꿈으로 계속 추가
 # 테스트를 위해 최근 들은 곡 랜덤으로 링크 추가 ... 나중에 좋아하는 노래들로만 정리해야징
 
+https://youtu.be/mo9zv9P-anI?si=3zjtlB0w5pstKOZ3
+https://youtu.be/5gAHKU0vUcY?si=MpBuV9uyQOe-4X6w
+https://youtu.be/lU12lJeImOY?si=ZIBjS9irTjdSQPaL
+https://youtu.be/Z9scYCM6MnU?si=FQKKo6mGj_ZrdU3C
+https://youtu.be/I9aZdIpP4Pg?si=gZm5IfbvDA3JEABh
+https://youtu.be/1czQIBhhe1A?si=L-65t5a-EGOneiGj
+https://youtu.be/x8u8s4swoTg?si=ryUI7SfSDzN_sq49
+https://youtu.be/QHVBHSI0NfQ?si=O_s1OdMArXPi5dlb
+https://youtu.be/epfxnk8jBsc?si=W3ahHxoZlJj-Bak-
+https://youtu.be/wW8ztKp5kp8?si=3H0VGsYEL9qXt71a
+https://youtu.be/ocfjbyD_37U?si=jv3WOgtiyPcZ4-Ow
+https://youtu.be/UBM-eArPBig?si=jAksKnK7vOMPGOa2
+https://youtu.be/Qh7BuYMkops?si=g-p-GiuKuR5qpH8I
 https://youtu.be/8kQH_bBMrMQ?si=N4oH-ExWlNxS7gsp
 https://www.youtube.com/watch?v=VZnfZ14fIig&list=RDEMeyZkHiRS2y1GGJugILGZvw&index=38
 https://www.youtube.com/watch?v=93SsG6D78XI&list=RDEMeyZkHiRS2y1GGJugILGZvw&index=20
