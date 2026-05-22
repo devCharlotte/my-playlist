@@ -53,3 +53,14 @@ Pink Sweat$, 폴킴, DAY6, 김종국, 멜로망스 등
 - 안지영 → 볼빨간사춘기
 - 백아, 백예린 카테고리 추가
 - 그랬나봐 → 카더가든
+
+
+## 추가 보정 규칙
+
+- Oasis 카테고리를 추가했습니다.
+- `cmpRLQZkTb8`은 Oasis - Don't Look Back In Anger로 처리합니다.
+- `vIPug7A8Fds`는 규현으로 처리합니다.
+- `ROIvbbg8jMQ`, `4FvqdZtH4xo`, `-RqRdRoEzJo`, `ZsuX9aSst-4`, `znKyb6OOq60`은 잔나비로 처리합니다.
+- 최유리 영어 표기와 한국어 표기는 같은 최유리 카테고리로 통일합니다.
+- 성시경, 김종국 등 한국 가수의 영문 표기는 한글 카테고리로 통일합니다.
+- 이찬혁/이수현은 AKMU로, 안지영/BOL4는 볼빨간사춘기로 통일합니다.

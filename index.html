@@ -681,7 +681,7 @@
     ];
 
     const FEATURED_ARTISTS = [
-      { label: "최유리", aliases: ["최유리", "Choi Yu Ree", "Choi Yuri", "Yu Ree Choi"] },
+      { label: "최유리", aliases: ["최유리", "Choi Yu Ree", "Choi Yuri", "Choi Yu-ri", "CHOI YU REE", "Yu Ree Choi"] },
       { label: "로이킴", aliases: ["로이킴", "Roy Kim"] },
       { label: "Charlie Puth", aliases: ["Charlie Puth", "CharliePuth"] },
       { label: "Lauv", aliases: ["Lauv"] },
@@ -689,23 +689,23 @@
       { label: "Peder Elias", aliases: ["Peder Elias"] },
       { label: "Ed Sheeran", aliases: ["Ed Sheeran"] },
       { label: "이무진", aliases: ["이무진", "Lee Mujin", "Lee Mu Jin"] },
-      { label: "성시경", aliases: ["성시경", "Sung Si Kyung", "Sung Si-kyung"] },
+      { label: "성시경", aliases: ["성시경", "Sung Si Kyung", "Sung Si-kyung", "Sung Sikyung", "SUNG SI KYUNG"] },
       { label: "규현", aliases: ["규현", "Kyuhyun", "Kyu Hyun"] },
       { label: "Bruno Mars", aliases: ["Bruno Mars"] },
-      { label: "볼빨간사춘기", aliases: ["볼빨간사춘기", "BOL4", "Bolbbalgan4"] },
+      { label: "볼빨간사춘기", aliases: ["볼빨간사춘기", "BOL4", "Bolbbalgan4", "안지영", "Ahn Ji Young", "Ahn Jiyoung"] },
       { label: "카더가든", aliases: ["카더가든", "Car the Garden", "Car, the Garden"] },
       { label: "종현", aliases: ["종현", "JONGHYUN", "Jonghyun"] },
       { label: "잔나비", aliases: ["잔나비", "JANNABI"] },
       { label: "10CM", aliases: ["10cm", "10CM", "십센치"] },
       { label: "BIG Naughty", aliases: ["BIG Naughty", "Big Naughty", "빅나티", "서동현"] },
-      { label: "AKMU", aliases: ["AKMU", "악뮤", "악동뮤지션", "Akdong Musician"] },
+      { label: "AKMU", aliases: ["AKMU", "악뮤", "악동뮤지션", "Akdong Musician", "이찬혁", "이수현", "LEE CHANHYUK", "Lee Chanhyuk", "Lee Chan Hyuk", "LEE SUHYUN", "Lee Suhyun", "Lee Su Hyun"] },
       { label: "Crush", aliases: ["Crush", "크러쉬"] },
       { label: "다비치", aliases: ["다비치", "Davichi"] },
       { label: "PLAVE", aliases: ["PLAVE", "플레이브"] },
       { label: "Pink Sweat$", aliases: ["Pink Sweat$", "Pink Sweat", "Pink Sweats"] },
       { label: "폴킴", aliases: ["폴킴", "Paul Kim"] },
       { label: "DAY6", aliases: ["DAY6", "Day6", "데이식스"] },
-      { label: "김종국", aliases: ["김종국", "종국김", "Kim Jong Kook", "Kim Jong-kook"] },
+      { label: "김종국", aliases: ["김종국", "종국김", "Kim Jong Kook", "Kim Jong-kook", "Kim Jongkook", "KIM JONG KOOK"] },
       { label: "멜로망스", aliases: ["멜로망스", "MeloMance", "Melomance"] },
 
       /* 사용자가 추가로 요청한 대표/보정 카테고리 */
@@ -718,6 +718,7 @@
       { label: "백아", aliases: ["백아", "Baek A", "Baek Ah"] },
       { label: "백예린", aliases: ["백예린", "Yerin Baek", "Baek Yerin"] },
       { label: "딘딘", aliases: ["딘딘", "DINDIN", "DinDin"] },
+      { label: "Oasis", aliases: ["Oasis", "오아시스"] },
       { label: "검정치마", aliases: ["검정치마", "The Black Skirts", "Black Skirts", "Black Skirt", "블랙스커트"] }
     ];
 
@@ -1105,6 +1106,16 @@
       { artist: "Greyson Chance", songTitle: "Dancing Next To Me", includes: ["greyson chance", "dancing next to me"] }
     ];
 
+    const VIDEO_ID_TRACK_RULES = {
+      cmpRLQZkTb8: { artist: "Oasis", songTitle: "Don't Look Back In Anger", languageKey: "pop", languageLabel: "팝송" },
+      vIPug7A8Fds: { artist: "규현", songTitle: "", languageKey: "korean", languageLabel: "한국 노래" },
+      ROIvbbg8jMQ: { artist: "잔나비", songTitle: "", languageKey: "korean", languageLabel: "한국 노래" },
+      "4FvqdZtH4xo": { artist: "잔나비", songTitle: "", languageKey: "korean", languageLabel: "한국 노래" },
+      "-RqRdRoEzJo": { artist: "잔나비", songTitle: "", languageKey: "korean", languageLabel: "한국 노래" },
+      "ZsuX9aSst-4": { artist: "잔나비", songTitle: "", languageKey: "korean", languageLabel: "한국 노래" },
+      znKyb6OOq60: { artist: "잔나비", songTitle: "", languageKey: "korean", languageLabel: "한국 노래" }
+    };
+
     function tokenMatches(text, keyText, token) {
       const plainToken = String(token || "").toLowerCase();
       const keyToken = normalizeArtistKey(token);
@@ -1170,15 +1181,25 @@
       const rawCounts = new Map();
 
       for (const item of items) {
-        const manualRule = findManualTrackRule(item.title, item.channel, item.artist);
+        const exactRule = VIDEO_ID_TRACK_RULES[item.sourceId] || null;
+        const manualRule = exactRule || findManualTrackRule(item.title, item.channel, item.artist);
         const preferred = manualRule?.artist || inferPreferredArtist(item.title, item.channel, item.artist);
+
         item.preferredArtist = preferred;
         item.displayArtist = preferred || item.artist;
         item.artistCategory = item.displayArtist;
         item.songTitle = manualRule?.songTitle || inferSongTitle(item.title, item.displayArtist);
         item.displayTitle = formatTrackTitle(item.displayArtist, item.songTitle, item.title, item.type);
-        item.languageLabel = inferLanguageCategory(`${item.title} ${item.displayTitle}`, item.channel, item.artistCategory).label;
-        item.languageKey = inferLanguageCategory(`${item.title} ${item.displayTitle}`, item.channel, item.artistCategory).key;
+
+        if (manualRule?.languageKey && manualRule?.languageLabel) {
+          item.languageKey = manualRule.languageKey;
+          item.languageLabel = manualRule.languageLabel;
+        } else {
+          const language = inferLanguageCategory(`${item.title} ${item.displayTitle}`, item.channel, item.artistCategory);
+          item.languageKey = language.key;
+          item.languageLabel = language.label;
+        }
+
         rawCounts.set(item.artistCategory, (rawCounts.get(item.artistCategory) || 0) + 1);
       }
 
