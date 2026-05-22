@@ -11,6 +11,4 @@
 # https://youtu.be/VIDEO_ID,
 # https://www.youtube.com/playlist?list=PLAYLIST_ID
 
-https://www.youtube.com/watch?v=jfKfPfyJRdk,
-https://www.youtube.com/watch?v=5qap5aO4i9A,
-https://www.youtube.com/playlist?list=PLFgquLnL59alCl_2TQvOiD5Vgm1hCaGSI
+
