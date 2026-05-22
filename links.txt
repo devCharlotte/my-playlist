@@ -1,7 +1,9 @@
 # links.txt
 # YouTube 링크를 콤마 또는 줄바꿈으로 계속 추가
 # 테스트를 위해 최근 들은 곡 랜덤으로 링크 추가 ... 나중에 좋아하는 노래들로만 정리해야징
-
+https://youtu.be/-_r_Y5nuHlo?si=L7G6fD5AGDs1QAhL
+https://www.youtube.com/watch?v=HXV5aZaBLDo&list=RDEMwnORSafL7Oi_6Z_io0MVnw&index=2
+https://www.youtube.com/watch?v=gjQwwWjxPaQ&list=RDEMwnORSafL7Oi_6Z_io0MVnw&index=4
 https://www.youtube.com/watch?v=H_qXO7zVOU0
 https://youtu.be/rnSaeWKCrkg?si=XfB2CBOl2hrpNN7E
 https://youtu.be/WA5E-BxS8vM?si=6xDH2yhfYhVr6bZj
