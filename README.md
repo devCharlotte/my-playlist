@@ -37,3 +37,19 @@ Pink Sweat$, 폴킴, DAY6, 김종국, 멜로망스 등
 
 `watch?v=...&list=RD...`처럼 추천/라디오 playlist 파라미터가 붙은 YouTube 링크도 곡 영상으로 우선 처리합니다.
 카드 제목은 가능한 경우 `가수 - 제목` 형식으로 표시됩니다.
+
+## 수동 보정 규칙
+
+다음 항목은 제목/가수 분류가 어긋나지 않도록 수동 보정 규칙을 추가했습니다.
+
+- 종국김 → 김종국
+- 딘딘/DINDIN → 딘딘, 제목은 `인생네컷`
+- Black Skirts/블랙스커트 → 검정치마
+- 방예담/BANG YEDAM → 비긴어게인 방예담
+- One Direction, Coldplay 카테고리 추가
+- Stephen Sanchez - Until I Found You
+- The Rare Occasions - Notion
+- Jin Ah Kwon/권진아 - 운이 좋았지
+- 안지영 → 볼빨간사춘기
+- 백아, 백예린 카테고리 추가
+- 그랬나봐 → 카더가든

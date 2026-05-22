@@ -705,8 +705,20 @@
       { label: "Pink Sweat$", aliases: ["Pink Sweat$", "Pink Sweat", "Pink Sweats"] },
       { label: "폴킴", aliases: ["폴킴", "Paul Kim"] },
       { label: "DAY6", aliases: ["DAY6", "Day6", "데이식스"] },
-      { label: "김종국", aliases: ["김종국", "Kim Jong Kook", "Kim Jong-kook"] },
+      { label: "김종국", aliases: ["김종국", "종국김", "Kim Jong Kook", "Kim Jong-kook"] },
       { label: "멜로망스", aliases: ["멜로망스", "MeloMance", "Melomance"] },
+
+      /* 사용자가 추가로 요청한 대표/보정 카테고리 */
+      { label: "비긴어게인 방예담", aliases: ["방예담", "BANG YEDAM", "Bang Yedam", "Beginagain 방예담", "비긴어게인 방예담"] },
+      { label: "One Direction", aliases: ["One Direction", "OneDirection"] },
+      { label: "Coldplay", aliases: ["Coldplay"] },
+      { label: "Stephen Sanchez", aliases: ["Stephen Sanchez"] },
+      { label: "The Rare Occasions", aliases: ["The Rare Occasions", "Rare Occasions"] },
+      { label: "권진아", aliases: ["권진아", "Jin Ah Kwon", "Kwon Jin Ah", "Kwon Jin-Ah"] },
+      { label: "백아", aliases: ["백아", "Baek A", "Baek Ah"] },
+      { label: "백예린", aliases: ["백예린", "Yerin Baek", "Baek Yerin"] },
+      { label: "딘딘", aliases: ["딘딘", "DINDIN", "DinDin"] },
+      { label: "검정치마", aliases: ["검정치마", "The Black Skirts", "Black Skirts", "Black Skirt", "블랙스커트"] }
     ];
 
     const OTHER_ARTIST_LABEL = "기타";
@@ -983,14 +995,164 @@
     }
 
     function normalizeArtistKey(text) {
-      return String(text || "")
-        .normalize("NFKD")
+      const raw = String(text || "");
+      const normalized = `${raw} ${raw.normalize("NFKC")} ${raw.normalize("NFKD")}`;
+
+      return normalized
         .toLowerCase()
         .replace(/&/g, "and")
+        .replace(/\$/g, "s")
         .replace(/[^a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ]/g, "");
     }
 
+    function normalizeForRule(text) {
+      const raw = String(text || "");
+      return `${raw} ${raw.normalize("NFKC")} ${raw.normalize("NFKD")}`.toLowerCase();
+    }
+
+    const MANUAL_TRACK_RULES = [
+      {
+        artist: "김종국",
+        songTitle: "",
+        includes: ["김종국", "종국김", "kim jong kook", "kim jong-kook"],
+      },
+      {
+        artist: "딘딘",
+        songTitle: "인생네컷",
+        includes: ["딘딘", "dindin", "life4cuts", "인생네컷"],
+      },
+      {
+        artist: "검정치마",
+        songTitle: "",
+        includes: ["검정치마", "the black skirts", "black skirt", "black skirts", "블랙스커트"],
+      },
+      {
+        artist: "비긴어게인 방예담",
+        songTitle: "그런 일은",
+        includes: ["방예담", "bang yedam", "그런 일은"],
+      },
+      {
+        artist: "비긴어게인 방예담",
+        songTitle: "미워",
+        includes: ["방예담", "bang yedam", "미워", "ego"],
+      },
+      {
+        artist: "One Direction",
+        songTitle: "What Makes You Beautiful",
+        includes: ["one direction", "what makes you beautiful"],
+      },
+      {
+        artist: "Coldplay",
+        songTitle: "Fix You",
+        includes: ["coldplay", "fix you"],
+      },
+      {
+        artist: "Coldplay",
+        songTitle: "Yellow",
+        includes: ["coldplay", "yellow"],
+      },
+      {
+        artist: "Stephen Sanchez",
+        songTitle: "Until I Found You",
+        includes: ["stephen sanchez", "until i found you"],
+      },
+      {
+        artist: "The Rare Occasions",
+        songTitle: "Notion",
+        includes: ["the rare occasions", "rare occasions", "notion"],
+      },
+      {
+        artist: "권진아",
+        songTitle: "운이 좋았지",
+        includes: ["권진아", "jin ah kwon", "kwon jin ah", "i got lucky", "운이 좋았지"],
+      },
+      {
+        artist: "볼빨간사춘기",
+        songTitle: "에피소드",
+        includes: ["안지영", "볼빨간사춘기", "episode", "에피소드"],
+      },
+      {
+        artist: "백아",
+        songTitle: "첫사랑",
+        includes: ["백아", "첫사랑"],
+      },
+      {
+        artist: "카더가든",
+        songTitle: "그랬나봐",
+        includes: ["카더가든", "그랬나봐"],
+      },
+      {
+        artist: "백예린",
+        songTitle: "Antifreeze",
+        includes: ["백예린", "yerin baek", "antifreeze"],
+      },
+
+      /* 기존 기타/Unknown으로 많이 빠지던 항목들의 제목 정리 */
+      { artist: "박재범", songTitle: "Yesterday", includes: ["박재범", "jay park", "yesterday"] },
+      { artist: "Jason Mraz", songTitle: "I'm Yours", includes: ["jason mraz", "i'm yours", "im yours"] },
+      { artist: "유재하", songTitle: "사랑하기 때문에", includes: ["유재하", "yu jae ha", "because i love you", "사랑하기 때문에"] },
+      { artist: "죠지", songTitle: "좋아해..", includes: ["죠지", "좋아해"] },
+      { artist: "Christina Perri", songTitle: "A Thousand Years", includes: ["christina perri", "a thousand years"] },
+      { artist: "싸이", songTitle: "기댈곳", includes: ["싸이", "psy", "기댈곳"] },
+      { artist: "뜨거운 감자", songTitle: "고백", includes: ["뜨거운 감자", "고백"] },
+      { artist: "이영지", songTitle: "Small girl", includes: ["이영지", "small girl"] },
+      { artist: "QWER", songTitle: "내 이름 맑음", includes: ["qwer", "내 이름 맑음"] },
+      { artist: "실리카겔", songTitle: "NO PAIN", includes: ["실리카겔", "no pain"] },
+      { artist: "NELL", songTitle: "기억을 걷는 시간", includes: ["nell", "기억을 걷는 시간"] },
+      { artist: "LEON", songTitle: "MAGNOLIA", includes: ["leon", "magnolia", "딥상어"] },
+      { artist: "Johnny Orlando", songTitle: "See You", includes: ["johnny orlando", "see you"] },
+      { artist: "The Reklaws", songTitle: "I Do Too", includes: ["the reklaws", "i do too"] },
+      { artist: "Greyson Chance", songTitle: "Dancing Next To Me", includes: ["greyson chance", "dancing next to me"] }
+    ];
+
+    function tokenMatches(text, keyText, token) {
+      const plainToken = String(token || "").toLowerCase();
+      const keyToken = normalizeArtistKey(token);
+      return (plainToken && text.includes(plainToken)) || (keyToken && keyText.includes(keyToken));
+    }
+
+    function findManualTrackRule(title, channel, artist) {
+      const text = normalizeForRule(`${title} ${channel} ${artist}`);
+      const keyText = normalizeArtistKey(`${title} ${channel} ${artist}`);
+
+      for (const rule of MANUAL_TRACK_RULES) {
+        /*
+          songTitle이 있는 규칙은 곡명 힌트가 실제 제목에 잡힐 때 우선 적용합니다.
+          이렇게 해야 "방예담"이라는 공통 키워드만 보고 모든 방예담 영상을 같은 곡으로 잘못 묶지 않습니다.
+        */
+        if (rule.songTitle) {
+          if (tokenMatches(text, keyText, rule.songTitle)) {
+            return rule;
+          }
+
+          const strongTitleHints = rule.includes.filter((token) => {
+            const normalizedToken = normalizeArtistKey(token);
+            const normalizedArtist = normalizeArtistKey(rule.artist);
+            return normalizedToken && normalizedToken !== normalizedArtist;
+          });
+
+          if (strongTitleHints.some((token) => tokenMatches(text, keyText, token))) {
+            return rule;
+          }
+
+          continue;
+        }
+
+        const matched = rule.includes.some((token) => tokenMatches(text, keyText, token));
+        if (matched) {
+          return rule;
+        }
+      }
+
+      return null;
+    }
+
     function inferPreferredArtist(title, channel, artist) {
+      const manual = findManualTrackRule(title, channel, artist);
+      if (manual?.artist) {
+        return manual.artist;
+      }
+
       const haystack = normalizeArtistKey(`${title} ${channel} ${artist}`);
 
       for (const entry of FEATURED_ARTISTS) {
@@ -1008,12 +1170,15 @@
       const rawCounts = new Map();
 
       for (const item of items) {
-        const preferred = inferPreferredArtist(item.title, item.channel, item.artist);
+        const manualRule = findManualTrackRule(item.title, item.channel, item.artist);
+        const preferred = manualRule?.artist || inferPreferredArtist(item.title, item.channel, item.artist);
         item.preferredArtist = preferred;
         item.displayArtist = preferred || item.artist;
         item.artistCategory = item.displayArtist;
-        item.songTitle = inferSongTitle(item.title, item.displayArtist);
+        item.songTitle = manualRule?.songTitle || inferSongTitle(item.title, item.displayArtist);
         item.displayTitle = formatTrackTitle(item.displayArtist, item.songTitle, item.title, item.type);
+        item.languageLabel = inferLanguageCategory(`${item.title} ${item.displayTitle}`, item.channel, item.artistCategory).label;
+        item.languageKey = inferLanguageCategory(`${item.title} ${item.displayTitle}`, item.channel, item.artistCategory).key;
         rawCounts.set(item.artistCategory, (rawCounts.get(item.artistCategory) || 0) + 1);
       }
 
@@ -1070,13 +1235,15 @@
 
       const rawTitle = meta?.title || (parsed.type === "playlist" ? "YouTube Playlist" : "YouTube Video");
       const channel = meta?.author_name || "Unknown Channel";
-      const artist = inferArtist(rawTitle, channel);
-      const preferredArtist = inferPreferredArtist(rawTitle, channel, artist);
+      const detectedArtist = inferArtist(rawTitle, channel);
+      const manualRule = findManualTrackRule(rawTitle, channel, detectedArtist);
+      const artist = manualRule?.artist || detectedArtist;
+      const preferredArtist = manualRule?.artist || inferPreferredArtist(rawTitle, channel, artist);
       const displayArtist = preferredArtist || artist;
       const artistCategory = displayArtist;
-      const songTitle = inferSongTitle(rawTitle, displayArtist);
+      const songTitle = manualRule?.songTitle || inferSongTitle(rawTitle, displayArtist);
       const displayTitle = formatTrackTitle(displayArtist, songTitle, rawTitle, parsed.type);
-      const language = inferLanguageCategory(rawTitle, channel, artistCategory);
+      const language = inferLanguageCategory(`${rawTitle} ${displayTitle}`, channel, artistCategory);
       const thumbnail = thumbnailFor(parsed, meta);
 
       return {
