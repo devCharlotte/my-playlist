@@ -75,3 +75,17 @@ Akdong Musician / 악동뮤지션 / 이찬혁 / 이수현 → AKMU
 ```
 
 또한 대표 가수 카테고리에 해당하는 항목은 곡 수가 1~2개여도 `기타`로 이동하지 않습니다.
+
+
+## 추가 카테고리 정리
+
+다음 항목을 보정했습니다.
+
+```text
+Jason Mraz → Jason Mraz 카테고리
+𝐋𝐀𝐍𝐘 / LANY / lany → LANY 카테고리
+Charlie Puth / Charlie Puth (찰리 푸스) → 찰리푸스 카테고리
+Sung Si Kyung / Sung Si-kyung / Sung Sikyung → 성시경 카테고리
+```
+
+특히 `기타`로 빠지던 LANY와 Jason Mraz는 대표 카테고리로 고정되며, 성시경은 영어 표기 대신 한국어 카테고리명으로 통일됩니다.

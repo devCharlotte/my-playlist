@@ -683,9 +683,9 @@
     const FEATURED_ARTISTS = [
       { label: "최유리", aliases: ["최유리", "Choi Yu Ree", "Choi Yuri", "Yu Ree Choi", "Yu Ree", "Choi Yu-Ri", "CHOI YU REE", "CHOI YURI"] },
       { label: "로이킴", aliases: ["로이킴", "Roy Kim", "ROY KIM"] },
-      { label: "Charlie Puth", aliases: ["Charlie Puth", "CharliePuth", "찰리 푸스", "찰리푸스"] },
+      { label: "찰리푸스", aliases: ["Charlie Puth", "CharliePuth", "찰리 푸스", "찰리푸스", "Charles Otto Puth"] },
       { label: "Lauv", aliases: ["Lauv"] },
-      { label: "LANY", aliases: ["Lany", "LANY"] },
+      { label: "LANY", aliases: ["Lany", "LANY", "lany", "𝐋𝐀𝐍𝐘"] },
       { label: "Peder Elias", aliases: ["Peder Elias"] },
       { label: "Ed Sheeran", aliases: ["Ed Sheeran"] },
       { label: "이무진", aliases: ["이무진", "Lee Mujin", "Lee Mu Jin", "LEE MU JIN", "Lee Mujin Service", "리무진서비스"] },
@@ -710,6 +710,7 @@
 
       /* 사용자가 추가로 요청한 대표/보정 카테고리 */
       { label: "비긴어게인 방예담", aliases: ["방예담", "BANG YEDAM", "Bang Yedam", "Beginagain 방예담", "비긴어게인 방예담"] },
+      { label: "Jason Mraz", aliases: ["Jason Mraz", "JasonMraz"] },
       { label: "One Direction", aliases: ["One Direction", "OneDirection"] },
       { label: "Coldplay", aliases: ["Coldplay"] },
       { label: "Oasis", aliases: ["Oasis"] },
@@ -998,7 +999,7 @@
       ]);
 
       const popArtistLabels = new Set([
-        "Charlie Puth", "Lauv", "LANY", "Peder Elias", "Ed Sheeran", "Bruno Mars",
+        "찰리푸스", "Lauv", "LANY", "Peder Elias", "Ed Sheeran", "Bruno Mars",
         "Pink Sweat$", "One Direction", "Coldplay", "Oasis", "Stephen Sanchez",
         "The Rare Occasions", "Jason Mraz", "Christina Perri", "Johnny Orlando",
         "The Reklaws", "Greyson Chance"
@@ -1040,7 +1041,11 @@
 
       /* 대표 카테고리 강제 정규화: 제목/채널이 애매해도 기존 카테고리로 이동 */
       { artist: "최유리", songTitle: "", includes: ["최유리", "choi yu ree", "choi yuri", "yu ree choi", "yu ree", "choi yu-ri"] },
-      { artist: "성시경", songTitle: "", includes: ["성시경", "sung si kyung", "sung si-kyung", "sung sikyung", "si kyung sung"] },
+      { artist: "성시경", songTitle: "", includes: ["성시경", "sung si kyung", "sung si-kyung", "sung sikyung", "sungsikyung", "si kyung sung", "sung si-kyung"] },
+      { artist: "Jason Mraz", songTitle: "", includes: ["jason mraz", "jasonmraz"] },
+      { artist: "LANY", songTitle: "", includes: ["lany", "𝐋𝐀𝐍𝐘"] },
+      { artist: "찰리푸스", songTitle: "", includes: ["charlie puth", "charlieputh", "찰리 푸스", "찰리푸스"] },
+
       { artist: "김종국", songTitle: "", includes: ["김종국", "종국김", "kim jong kook", "kim jong-kook", "jong kook kim", "jongkook kim", "kim jongkook"] },
       { artist: "이무진", songTitle: "", includes: ["이무진", "lee mu jin", "lee mujin", "leemujin", "리무진서비스", "limousine service"] },
       { artist: "로이킴", songTitle: "", includes: ["로이킴", "roy kim", "roykim"] },
@@ -1135,6 +1140,16 @@
 
       /* 기존 기타/Unknown으로 많이 빠지던 항목들의 제목 정리 */
       { artist: "박재범", songTitle: "Yesterday", includes: ["박재범", "jay park", "yesterday"] },
+      {
+        artist: "LANY",
+        songTitle: "dna",
+        includes: ["lany", "𝐋𝐀𝐍𝐘", "dna", "𝐝𝐧𝐚"],
+      },
+      {
+        artist: "찰리푸스",
+        songTitle: "I Don't Think That I Like Her",
+        includes: ["charlie puth", "찰리 푸스", "찰리푸스", "i don't think that i like her", "i dont think that i like her"],
+      },
       { artist: "Jason Mraz", songTitle: "I'm Yours", includes: ["jason mraz", "i'm yours", "im yours"] },
       { artist: "유재하", songTitle: "사랑하기 때문에", includes: ["유재하", "yu jae ha", "because i love you", "사랑하기 때문에"] },
       { artist: "죠지", songTitle: "좋아해..", includes: ["죠지", "좋아해"] },
