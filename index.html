@@ -819,19 +819,28 @@
         videoId = url.pathname.split("/shorts/")[1]?.split("/")[0] || "";
       }
 
-      if (listId) {
-        return {
-          type: "playlist",
-          id: listId,
-          videoId: videoId || "",
-        };
-      }
-
+      /*
+        중요:
+        watch?v=VIDEO_ID&list=RD... 형태는 "플레이리스트"가 아니라
+        특정 곡 영상으로 처리해야 제목/가수 metadata를 정상적으로 가져올 수 있습니다.
+        기존 로직은 list 파라미터가 있으면 무조건 playlist로 분류해서
+        "Playlist RD..." 같은 카드 제목이 생겼습니다.
+      */
       if (videoId) {
         return {
           type: "video",
           id: videoId,
           videoId,
+          listId: listId || "",
+        };
+      }
+
+      if (listId) {
+        return {
+          type: "playlist",
+          id: listId,
+          videoId: "",
+          listId,
         };
       }
 
@@ -901,6 +910,66 @@
       return cleanArtistName(authorName || "Unknown Artist");
     }
 
+    function cleanSongTitle(text) {
+      return String(text || "")
+        .replace(/\[[^\]]*(official|mv|m\/v|video|audio|lyrics?|live|performance|visualizer|teaser|stage|가사|뮤비|음원|티저)[^\]]*\]/gi, "")
+        .replace(/\([^\)]*(official|mv|m\/v|video|audio|lyrics?|live|performance|visualizer|teaser|stage|가사|뮤비|음원|티저)[^\)]*\)/gi, "")
+        .replace(/\b(official\s*)?(music\s*)?(video|audio|lyrics?|visualizer|performance|live|teaser|mv|m\/v)\b/gi, "")
+        .replace(/\bHD\b|\b4K\b/gi, "")
+        .replace(/\s+/g, " ")
+        .replace(/^[\\/:|｜\-–—\s]+|[\\/:|｜\-–—\s]+$/g, "")
+        .trim();
+    }
+
+    function inferSongTitle(title, artist) {
+      const cleanTitle = removeBracketNoise(title);
+
+      const separatorMatch = cleanTitle.match(/^(.{1,80}?)\s(?:-|–|—|\||｜|:)\s(.+)$/);
+      if (separatorMatch?.[2]) {
+        return cleanSongTitle(separatorMatch[2]);
+      }
+
+      const quoteMatch = cleanTitle.match(/^(.{1,60}?)\s*[\"'‘’“”]([^\"'‘’“”]+)[\"'‘’“”]/);
+      if (quoteMatch?.[2]) {
+        return cleanSongTitle(quoteMatch[2]);
+      }
+
+      const byMatch = cleanTitle.match(/^(.{1,80}?)\s+by\s+(.+)$/i);
+      if (byMatch?.[1]) {
+        return cleanSongTitle(byMatch[1]);
+      }
+
+      let value = cleanSongTitle(cleanTitle);
+      const artistKey = normalizeArtistKey(artist);
+
+      if (artistKey) {
+        const parts = value.split(/\s(?:-|–|—|\||｜|:)\s/);
+        value = parts
+          .filter((part) => normalizeArtistKey(part) !== artistKey)
+          .join(" - ")
+          .trim() || value;
+      }
+
+      return value || cleanSongTitle(title) || "Untitled";
+    }
+
+    function formatTrackTitle(artist, songTitle, fallbackTitle, type) {
+      const safeArtist = cleanArtistName(artist || "Unknown Artist");
+      const safeSong = cleanSongTitle(songTitle || fallbackTitle || "");
+      const isGeneratedFallback =
+        /^Playlist\s+/i.test(String(fallbackTitle || "")) ||
+        /^Video\s+/i.test(String(fallbackTitle || "")) ||
+        /^YouTube Playlist$/i.test(String(fallbackTitle || "")) ||
+        /^YouTube Video$/i.test(String(fallbackTitle || ""));
+
+      if (type === "playlist" && isGeneratedFallback) {
+        return `${safeArtist} - YouTube Playlist`;
+      }
+
+      return `${safeArtist} - ${safeSong || "Untitled"}`;
+    }
+
+
     function hasHangul(text) {
       return /[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(String(text || ""));
     }
@@ -941,7 +1010,10 @@
       for (const item of items) {
         const preferred = inferPreferredArtist(item.title, item.channel, item.artist);
         item.preferredArtist = preferred;
-        item.artistCategory = preferred || item.artist;
+        item.displayArtist = preferred || item.artist;
+        item.artistCategory = item.displayArtist;
+        item.songTitle = inferSongTitle(item.title, item.displayArtist);
+        item.displayTitle = formatTrackTitle(item.displayArtist, item.songTitle, item.title, item.type);
         rawCounts.set(item.artistCategory, (rawCounts.get(item.artistCategory) || 0) + 1);
       }
 
@@ -996,12 +1068,15 @@
         status = "fallback";
       }
 
-      const title = meta?.title || (parsed.type === "playlist" ? `Playlist ${parsed.id}` : `Video ${parsed.id}`);
+      const rawTitle = meta?.title || (parsed.type === "playlist" ? "YouTube Playlist" : "YouTube Video");
       const channel = meta?.author_name || "Unknown Channel";
-      const artist = inferArtist(title, channel);
-      const preferredArtist = inferPreferredArtist(title, channel, artist);
-      const artistCategory = preferredArtist || artist;
-      const language = inferLanguageCategory(title, channel, artistCategory);
+      const artist = inferArtist(rawTitle, channel);
+      const preferredArtist = inferPreferredArtist(rawTitle, channel, artist);
+      const displayArtist = preferredArtist || artist;
+      const artistCategory = displayArtist;
+      const songTitle = inferSongTitle(rawTitle, displayArtist);
+      const displayTitle = formatTrackTitle(displayArtist, songTitle, rawTitle, parsed.type);
+      const language = inferLanguageCategory(rawTitle, channel, artistCategory);
       const thumbnail = thumbnailFor(parsed, meta);
 
       return {
@@ -1010,12 +1085,16 @@
         type: parsed.type,
         sourceId: parsed.id,
         videoId: parsed.videoId || (parsed.type === "video" ? parsed.id : ""),
+        listId: parsed.listId || "",
         url,
-        title,
+        title: rawTitle,
+        songTitle,
+        displayTitle,
         channel,
         artist,
         artistCategory,
         preferredArtist,
+        displayArtist,
         languageKey: language.key,
         languageLabel: language.label,
         thumbnail,
@@ -1120,7 +1199,10 @@
 
       return state.items.filter((item) => {
         const haystack = [
+          item.displayTitle,
+          item.songTitle,
           item.title,
+          item.displayArtist,
           item.artist,
           item.artistCategory,
           item.channel,
@@ -1251,7 +1333,7 @@
         if (item.thumbnail) {
           const img = document.createElement("img");
           img.src = item.thumbnail;
-          img.alt = `${item.title} thumbnail`;
+          img.alt = `${item.displayTitle || item.title} thumbnail`;
           img.loading = "lazy";
           thumb.appendChild(img);
         } else {
@@ -1273,20 +1355,20 @@
 
         const body = document.createElement("div");
         const title = document.createElement("h3");
-        title.textContent = item.title;
+        title.textContent = item.displayTitle || item.title;
 
         const meta = document.createElement("div");
         meta.className = "playlist-meta";
 
         const artist = document.createElement("span");
         artist.className = "playlist-tag";
-        artist.textContent = item.artistCategory || item.artist;
+        artist.textContent = item.artistCategory || item.displayArtist || item.artist;
 
         const detectedArtist = document.createElement("span");
         detectedArtist.className = "playlist-tag";
-        detectedArtist.textContent = item.artistCategory && item.artistCategory !== item.artist
-          ? `detected: ${item.artist}`
-          : item.artist;
+        detectedArtist.textContent = item.artistCategory && item.artistCategory !== (item.displayArtist || item.artist)
+          ? `detected: ${item.displayArtist || item.artist}`
+          : (item.displayArtist || item.artist);
 
         const channel = document.createElement("span");
         channel.className = "playlist-tag";
@@ -1310,7 +1392,7 @@
         actions.className = "playlist-card-actions";
         actions.append(
           makeButton("Play", "primary", () => selectItem(item.localId, true, true)),
-          makeButton("Artist category", "", () => setCategory(`artist::${item.artistCategory || item.artist}`)),
+          makeButton("Artist category", "", () => setCategory(`artist::${item.artistCategory || item.displayArtist || item.artist}`)),
           makeLink("YouTube", item.url, ""),
           makeButton("Copy", "", () => copyText(item.url))
         );
@@ -1339,7 +1421,7 @@
         num.textContent = index === state.queueIndex ? "▶" : String(index + 1);
 
         const text = document.createElement("div");
-        text.innerHTML = `<strong>${escapeHtml(item.artistCategory || item.artist)}</strong><br>${escapeHtml(item.title)}<br>${escapeHtml(item.languageLabel)}`;
+        text.innerHTML = `<strong>${escapeHtml(item.artistCategory || item.displayArtist || item.artist)}</strong><br>${escapeHtml(item.displayTitle || item.title)}<br>${escapeHtml(item.languageLabel)}`;
 
         row.append(num, text);
         queueList.appendChild(row);
@@ -1381,8 +1463,8 @@
       state.selectedId = localId;
       state.currentUrl = item.url;
 
-      nowTitle.textContent = item.title;
-      nowMeta.textContent = `${item.languageLabel} · ${item.artistCategory || item.artist} · ${item.channel} · ${item.type}`;
+      nowTitle.textContent = item.displayTitle || item.title;
+      nowMeta.textContent = `${item.languageLabel} · ${item.artistCategory || item.displayArtist || item.artist} · ${item.channel} · ${item.type}`;
       openYouTube.href = item.url;
 
       loadIntoPlayer(item, autoplay);
