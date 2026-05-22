@@ -1,2 +1,5 @@
 # links.txt
 # YouTube 링크를 콤마 또는 줄바꿈으로 계속 추가
+
+
+https://www.youtube.com/watch?v=ok7vbBYpFo8&list=RDqJPCAIKDNCU&index=15
